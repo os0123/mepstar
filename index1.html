@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Company Profile</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: white;
+    }
+    /* Navbar */
+    .navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      padding: 15px 20px;
+      background: rgba(0, 0, 0, 0.9);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 1000;
+    }
+    .logo {
+      color: white;
+      font-size: 24px;
+      font-weight: bold;
+    }
+    .menu-toggle {
+      display: none;
+      cursor: pointer;
+      font-size: 30px;
+      color: white;
+    }
+    .nav-links {
+      list-style: none;
+      display: flex;
+    }
+    .nav-links li {
+      margin: 0 15px;
+    }
+    .nav-links a {
+      color: white;
+      text-decoration: none;
+      font-size: 20px;
+    }
+    @media screen and (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+      .nav-links {
+        position: fixed;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.9);
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        transition: left 0.5s ease-in-out;
+        z-index: 1000;
+      }
+      .nav-links.active {
+        left: 0;
+      }
+      .nav-links li {
+        font-size: 30px;
+        font-weight: bold;
+        margin: 20px 0;
+      }
+      .cancel-icon {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        font-size: 40px;
+        cursor: pointer;
+        color: white;
+      }
+    }
+    @media screen and (min-width: 769px) {
+  .cancel-icon {
+    display: none;
+  }
+}
+
+    /* Hero Section */
+    .hero {
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      background: url('./hero.webp') no-repeat center center/cover;
+      color: white;
+      flex-direction: column;
+      position: relative;
+    }
+    .hero h1 {
+      font-size: 3rem;
+      animation: fadeIn 1.5s ease-in-out;
+    }
+    .hero p {
+      font-size: 1.5rem;
+      margin-top: 10px;
+      animation: fadeIn 2s ease-in-out;
+    }
+    @keyframes fadeIn {
+      0% { opacity: 0; transform: translateY(-20px); }
+      100% { opacity: 1; transform: translateY(0); }
+    }
+
+    /* About Us Section */
+    .about-section {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 10%;
+      gap: 50px;
+      min-height: 100vh;
+    }
+    .about-text {
+      flex: 1;
+      opacity: 0;
+      transform: translateX(-50px);
+      transition: all 1s ease-in-out;
+    }
+    .about-text h2 {
+      font-size: 2.5rem;
+      margin-bottom: 10px;
+    }
+    .about-text p {
+      font-size: 1.2rem;
+      line-height: 1.6;
+    }
+    .about-image {
+      flex: 1;
+      text-align: center;
+      opacity: 0;
+      transform: translateX(50px);
+      transition: all 1s ease-in-out;
+    }
+    .about-image img {
+      width: 100%;
+      max-width: 400px;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.2);
+    }
+    @media screen and (max-width: 768px) {
+      .about-section {
+        flex-direction: column;
+        text-align: center;
+      }
+      .about-text, .about-image {
+        transform: translateX(0);
+      }
+    }
+    .about-section.show .about-text {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .about-section.show .about-image {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    .navbar {
+  transition: top 0.3s ease-in-out;
+}
+.services-section {
+      text-align: center;
+      padding: 100px 5%;
+    }
+    .services-title {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 40px;
+    }
+    .services-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      justify-content: center;
+      align-items: center;
+    }
+    .service-card {
+      background: #222;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+    }
+    .service-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+    }
+    .service-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    .projects-section {
+      text-align: center;
+      padding: 100px 5%;
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fadeInUp 1s ease-out forwards;
+    }
+    .projects-title {
+      font-size: 2rem;
+      font-weight: bold;
+      margin-bottom: 40px;
+      opacity: 0;
+      animation: slideIn 1s ease-out forwards;
+    }
+    .projects-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 30px;
+      justify-content: center;
+      align-items: center;
+    }
+    .project-card {
+      background: #222;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 0 10px rgba(255, 255, 255, 0.2);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+      text-align: center;
+      opacity: 0;
+      transform: translateY(50px);
+      animation: fadeInUp 1s ease-out forwards 0.3s;
+    }
+    .project-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 20px rgba(255, 255, 255, 0.4);
+    }
+    .project-card img {
+      width: 100%;
+      height: 160px;
+      object-fit: cover;
+      border-radius: 10px;
+      margin-bottom: 15px;
+    }
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    @keyframes slideIn {
+      from {
+        opacity: 0;
+        transform: translateX(-50px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    } 
+    .contact-title{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .line1{
+        text-align: center;
+    }
+    .line2{
+        text-align: center;
+    }
+    .line3{
+        text-align: center;
+    }
+    #colorwhite{
+        color: white;
+    }
+    .contact-details{
+        margin-top: 20px;
+        text-align: center;
+       
+    }
+    .contact-details a{
+        color: white;
+        text-decoration: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Navbar -->
+  <nav class="navbar">
+    <div class="logo">MyLogo</div>
+    <div class="menu-toggle" onclick="toggleMenu()">☰</div>
+    <ul class="nav-links" id="navLinks">
+      <li class="cancel-icon" onclick="toggleMenu()">×</li>
+      <li><a href="#">Home</a></li>
+      <li><a href="#about">About</a></li>
+      <li><a href="#services">Services</a></li>
+      <li><a href="#projects">Project</a></li>
+      <li><a href="#contact">Contacts</a></li>
+    </ul>
+  </nav>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <h1>Welcome to Our Website</h1>
+    <p>“MEP Star is a one stop shop for all your MEP needs”</p>
+  </section>
+
+  <!-- About Us Section -->
+  <section class="about-section" id="about">
+    <div class="about-text">
+      <h2>About Us</h2>
+      <p>We were incorporated in the year 2016 by the name of M/s Cool Channel primarily serving our Clients in the field of HVAC. As we progressed gaining trust and loyalty, our Clients granted us opportunities to expand into the broad-spectrum MEP field of works. To cater this need, we started MEP Star.
+        <br>
+      </p>
+    </div>
+    <div class="about-image">
+      <img src="./about.PNG" alt="About Image">
+    </div>
+  </section>
+
+  <section class="services-section" id="services">
+    <h2 class="services-title">Our Services</h2>
+    <div class="services-container">
+      <div class="service-card">
+        <img src="./about.PNG" alt="Service 1">
+        <h3>Service 1</h3>
+        <p>Short description of service 1.</p>
+      </div>
+      <div class="service-card">
+        <img src="./about.PNG" alt="Service 2">
+        <h3>Service 2</h3>
+        <p>Short description of service 2.</p>
+      </div>
+      <div class="service-card">
+        <img src="./about.PNG" alt="Service 3">
+        <h3>Service 3</h3>
+        <p>Short description of service 3.</p>
+      </div>
+    </div>
+  </section>
+  <section class="projects-section" id="projects">
+    <h2 class="projects-title">Our Projects</h2>
+    <div class="projects-container">
+      <div class="project-card">
+        <img src="./about.PNG" alt="Project 1">
+        <h3>Project 1</h3>
+        <p>Short description of project 1.</p>
+      </div>
+      <div class="project-card">
+        <img src="./about.PNG" alt="Project 2">
+        <h3>Project 2</h3>
+        <p>Short description of project 2.</p>
+      </div>
+      <div class="project-card">
+        <img src="./about.PNG" alt="Project 3">
+        <h3>Project 3</h3>
+        <p>Short description of project 3.</p>
+      </div>
+    </div>
+  </section>
+  <section class="contact-section" id="contact">
+    <h2 class="contact-title">Contact Us</h2>
+    <div class="contact-details">
+      <p ><strong>Contact Person:</strong> John Doe</p>
+      <p ><strong>Mobile Number:</strong> +123 456 7890</p>
+      <p  id="colorwhite"><strong><a href=""></strong> johndoe@example.com</p></a></p>
+      <p><strong>Address:</strong> 123 Street, City, Country</p>
+    </div>
+  </section>
+  <script>
+    function toggleMenu() {
+      document.getElementById('navLinks').classList.toggle('active');
+    }
+
+    function animateOnScroll() {
+      const aboutSection = document.querySelector('.about-section');
+      const sectionTop = aboutSection.getBoundingClientRect().top;
+      const triggerPoint = window.innerHeight - 100;
+
+      if (sectionTop < triggerPoint) {
+        aboutSection.classList.add('show');
+      }
+    }
+  
+    window.addEventListener('scroll', animateOnScroll);
+    animateOnScroll(); // Run on load
+    // Close menu when a nav link is clicked (mobile)
+document.querySelectorAll('.nav-links a').forEach(link => {
+  link.addEventListener('click', () => {
+    document.getElementById('navLinks').classList.remove('active');
+  });
+});
+
+    let lastScrollTop = 0;
+const navbar = document.querySelector(".navbar");
+
+window.addEventListener("scroll", function () {
+  let scrollTop = window.scrollY;
+  if (scrollTop > lastScrollTop) {
+    navbar.style.top = "-70px"; // Navbar hide
+  } else {
+    navbar.style.top = "0"; // Navbar show
+  }
+  lastScrollTop = scrollTop;
+});
+
+
+  </script>
+
+</body>
+</html
